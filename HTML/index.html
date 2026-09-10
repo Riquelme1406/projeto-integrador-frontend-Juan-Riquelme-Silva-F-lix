@@ -4,13 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darksiders 2 Wiki</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        a {
+            text-decoration: none;
+        }
+        ul {
+            list-style-type: none;
+        }
+    </style>
     <style>
     body {
         margin: 0;
         background-image: 
             linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
-            url('../imagens/template.png');
+            url('../Fotos/template.png');
         background-size: cover;
         background-position: center;
         background-attachment: fixed;
@@ -18,8 +26,8 @@
         color: #e8e8e8;
         min-height: 100vh;
     }
-</style>
-    <link href="../imagens/baixados.webp" rel="icon" type="image/x-icon">
+    </style>
+    <link href="../Fotos/baixados.webp" rel="icon" type="image/x-icon">
 </head>
 <body>
     <header>
@@ -41,11 +49,10 @@
                 <!-- preload="metadata" escolhido porque o vídeo fica abaixo da dobra da página:
                      carregamos apenas duração/dimensões do arquivo, sem baixar o vídeo inteiro,
                      até que o usuário decida clicar em play -->
-                <video controls width="50%" poster="../imagens/videos/trailer-poster.jpg" preload="metadata">
-                    <source src="../imagens/videos/trailer.webm" type="video/webm">
-                    <source src="../imagens/videos/trailer.mp4" type="video/mp4">
-                    <track kind="subtitles" src="../imagens/videos/trailer-pt.vtt" srclang="pt" label="Português" default>
-                    Seu navegador não suporta a execução de vídeos.
+                <video controls width="70%" poster="../Fotos/trailer-poster.jpg" preload="metadata">
+                    <source src="../Fotos/trailer.webm" type="video/webm">
+                    <source src="../Fotos/trailer.mp4" type="video/mp4">
+                    <track kind="subtitles" src="../Fotos/trailer-pt.vtt" srclang="pt" label="Português" default>
                 </video>
                 <small id="formato-suportado" aria-live="polite"></small>
             </div>
