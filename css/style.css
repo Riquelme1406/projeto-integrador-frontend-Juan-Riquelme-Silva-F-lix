@@ -10,7 +10,7 @@ body {
     margin: 0;
     background-image: 
         linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
-        url('../HTML/template.png');
+        url('../imagens/template.png');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
