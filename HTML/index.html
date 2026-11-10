@@ -12,8 +12,6 @@
     <header class="topo" id="cabecalho-principal">
         <nav class="navbar" aria-label="Navegação principal">
             <a href="index.html" class="logo">Darksiders 2 Wiki</a>
-            <!-- Aula 8, Erro 5: botão de verdade (não <div>), com aria-label e aria-expanded desde o HTML.
-                 O comportamento de abrir/fechar vem do js/menu.js (Aula 11) -->
             <button type="button" class="menu-hamburguer" aria-label="Abrir menu"
                     aria-expanded="false" aria-controls="menu-principal">
                 <span class="barra"></span>
@@ -38,8 +36,6 @@
 
     <main class="conteudo">
         <div class="hero">
-            <!-- Aula 5: selo em SVG (modo retido). viewBox define o sistema de coordenadas interno,
-                 e role="img" + <title>/<desc> dão ao selo um nome acessível -->
             <svg class="selo" viewBox="0 0 120 120" width="96" height="96" role="img"
                  aria-labelledby="titulo-selo desc-selo">
                 <title id="titulo-selo">Selo: Morte, Cavaleiro do Apocalipse</title>
@@ -57,9 +53,6 @@
         <section class="card" aria-labelledby="video-heading">
             <h2 id="video-heading">Trailer de Darksiders 2 Deathinitive Edition</h2>
             <div class="video-container">
-                <!-- preload="metadata" escolhido porque o vídeo fica abaixo da dobra da página:
-                     carregamos apenas duração/dimensões do arquivo, sem baixar o vídeo inteiro,
-                     até que o usuário decida clicar em play -->
                 <video controls poster="../Fotos/trailer-poster.jpg" preload="metadata">
                     <source src="../Fotos/trailer.webm" type="video/webm">
                     <source src="../Fotos/trailer.mp4" type="video/mp4">
@@ -118,7 +111,6 @@
             <h2 id="teoria-heading">Envie sua Teoria sobre a Lore</h2>
             <p>Tem alguma ideia sobre a história de Darksiders 2? Compartilhe com a comunidade!</p>
 
-            <!-- sem novalidate: a validação nativa (required, minlength, min/max, type=email) fica ativa -->
             <form>
                 <fieldset class="grade-campos">
                     <legend>Dados do colaborador</legend>
@@ -219,7 +211,6 @@
             </form>
         </section>
 
-        <!-- Exemplo de alerta com botão de ícone acessível (Desafio Extra); o JS em js/main.js fecha o aviso -->
         <div role="alert" id="alerta-exemplo" class="aviso">
             <p>Obrigado por contribuir com a wiki!</p>
             <button type="button" id="fechar-alerta" aria-label="Fechar alerta">✕</button>

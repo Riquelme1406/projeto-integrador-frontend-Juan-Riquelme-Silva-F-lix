@@ -12,8 +12,6 @@
     <header class="topo" id="cabecalho-principal">
         <nav class="navbar" aria-label="Navegação principal">
             <a href="index.html" class="logo">Darksiders 2 Wiki</a>
-            <!-- Aula 8, Erro 5: botão de verdade (não <div>), com aria-label e aria-expanded desde o HTML.
-                 O comportamento de abrir/fechar vem do js/menu.js (Aula 11) -->
             <button type="button" class="menu-hamburguer" aria-label="Abrir menu"
                     aria-expanded="false" aria-controls="menu-principal">
                 <span class="barra"></span>
@@ -44,9 +42,6 @@
         <section class="grafico card" aria-labelledby="grafico-heading">
             <h2 id="grafico-heading">Panorama dos personagens da wiki</h2>
             <figure>
-                <!-- width/height como ATRIBUTOS definem a grade real de pixels do canvas (Erro 1 da Aula 5).
-                     role="img" + aria-label dão um resumo ao leitor de tela; o texto dentro do <canvas>
-                     é o fallback content para quem não consegue ler o desenho -->
                 <canvas id="grafico-personagens" width="480" height="280" role="img"
                         aria-label="Gráfico de barras: Cavaleiros 4, Trama principal 12, Makers 5.">
                     <p>Personagens cadastrados na wiki por grupo: Cavaleiros 4, Trama principal 12, Makers 5.</p>
@@ -79,7 +74,7 @@
                 <article class="card-item" data-grupo="cavaleiros" data-palavras="49">
                     <h3>Fury (Fúria) — a quarta Cavaleira.</h3>
                     <p>
-            Embora não seja controlável em Darksiders II, ela é mencionada e aparece brevemente no final do jogo, quando os quatro Cavaleiros se reúnem para responder ao chamado de War.    
+            Embora não seja controlável em Darksiders II, ela é mencionada e aparece brevemente no final do jogo, quando os quatro Cavaleiros se reúnem para responder ao chamado de War.
             Assim como Strife, possui participação breve em Darksiders II, principalmente no encerramento que conecta o jogo aos acontecimentos de Darksiders.
         </p>
                 </article>

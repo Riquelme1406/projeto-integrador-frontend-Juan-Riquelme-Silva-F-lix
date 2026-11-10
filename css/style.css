@@ -1,44 +1,14 @@
-/* ===== style.css — Darksiders 2 Wiki (Aulas 06, 07 e 08) =====
-
-   AULA 06 — os 4 erros comuns e onde cada um foi evitado:
-   1. margin x padding  -> .card usa PADDING para o fundo preencher o interior da caixa
-                           e MARGIN só para afastar um card do vizinho.
-   2. box-sizing        -> reset.css aplica border-box em tudo (*, ::before, ::after).
-   3. px em tudo        -> fontes, espaçamentos e larguras em rem; px só em bordas,
-                           sombras e media queries, que não devem escalar com o texto.
-   4. cascata           -> nenhuma regra usa o modificador de prioridade nem estilo inline; conflitos são
-                           resolvidos por especificidade e ordem (links: LoVe/HAte).
-
-   AULA 07 — Flexbox, Grid e pseudo-classes:
-   - Layout geral da página em CSS Grid com áreas nomeadas (topo / conteudo / rodape).
-   - Grade de cards com repeat(auto-fit, minmax()): colunas mudam sem media query.
-   - Erro 1 (justify-content x align-items): justify-content distribui no eixo PRINCIPAL
-     (horizontal na navbar), align-items alinha no eixo CRUZADO (vertical).
-   - Erro 3 (grid implícito): só as colunas são explícitas; as linhas nascem sozinhas
-     (grid implícito) e crescem conforme o conteúdo, por isso nada tem altura fixa.
-   - Erro 4: as animações usam transform e opacity, nunca width/height.
-   - Erro 5 (layout thrashing): o JavaScript do projeto não mede nem altera geometria em laço.
-
-   AULA 08 — navegação:
-   - Erro 1 (z-index): o z-index vai no elemento que CRIA o contexto de empilhamento
-     (o header sticky), não no dropdown.
-   - Erro 2: o <li> pai do dropdown tem position: relative.
-   - Erro 3 (sticky): nenhum ancestral do header tem overflow diferente de visible.
-   - Erro 4: o dropdown encosta no item pai (top: 100%, sem margin), sem "buraco" de hover.
-   - Erro 5: o hambúrguer é um <button> com aria-label e aria-expanded. */
-
-/* ---------- Variáveis (paleta tirada da arte do jogo) ---------- */
 :root {
     --cor-fundo: #07120d;
     --cor-card: rgba(8, 24, 18, 0.82);
     --cor-borda: #2f5d4f;
-    --cor-primaria: #3fb6a0;          /* verde-água das foices de Morte */
+    --cor-primaria: #3fb6a0;
     --cor-primaria-clara: #7fd1b9;
-    --cor-osso: #d9c9a3;              /* tom de osso da máscara */
-    --cor-acento: #d9742b;            /* brasa, usada em destaques e no estado :active */
+    --cor-osso: #d9c9a3;
+    --cor-acento: #d9742b;
     --cor-texto: #e8e8e8;
     --cor-texto-suave: #a9bdb4;
-    --cor-visitado: #b9a2e6;          /* lilás claro: o roxo escuro da apostila some no fundo escuro */
+    --cor-visitado: #b9a2e6;
     --raio: 10px;
     --raio-card: 10px;
     --cor-acento-claro: #f0b27a;
@@ -48,13 +18,12 @@
     --fonte-texto: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
-/* ---------- Base ---------- */
 html {
-    font-size: 100%;                  /* = 16px no padrão, mas respeita a preferência do usuário */
+    font-size: 100%;
 }
 
 body {
-    background-color: var(--cor-fundo);   /* cor de reserva enquanto a imagem não carrega */
+    background-color: var(--cor-fundo);
     background-image:
         linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
         url("../Fotos/template.png");
@@ -67,8 +36,6 @@ body {
     line-height: 1.6;
     min-height: 100vh;
 
-    /* Aula 07: layout geral em áreas nomeadas. A linha do meio (1fr) absorve a sobra de altura,
-       então o rodapé fica no fim da janela mesmo em páginas curtas. */
     display: grid;
     grid-template-areas:
         "topo"
@@ -77,17 +44,15 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
-h1, h2, h3 {                          /* agrupamento (,): os três títulos usam a fonte serifada */
+h1, h2, h3 {
     font-family: var(--fonte-titulo);
     line-height: 1.2;
 }
 
 p {
-    margin-bottom: 1rem;              /* o reset zerou as margens; o espaço entre parágrafos volta aqui */
+    margin-bottom: 1rem;
 }
 
-/* ---------- Links: os 4 estados, NESTA ordem (LoVe/HAte) ----------
-   :link, :visited, :hover e :active têm a mesma especificidade, então vence o último declarado. */
 a:link {
     color: var(--cor-primaria-clara);
     text-decoration: none;
@@ -102,15 +67,10 @@ a:active {
     color: var(--cor-acento);
 }
 
-/* ---------- Topo: header sticky + navbar com Flexbox (Aula 8) ---------- */
-/* ID (especificidade 100) porque o cabeçalho é único na página; a classe .topo só liga à área do grid. */
 #cabecalho-principal {
     grid-area: topo;
     position: sticky;
-    top: 0;                           /* sem um deslocamento (top/bottom...) o sticky nunca "ativa" */
-    /* Aula 8, Erro 1: o z-index fica AQUI, em quem cria o contexto de empilhamento (sticky cria um).
-       Dentro dele o dropdown só precisa de z-index: 1. Os cards (position: relative) ficam em outro
-       contexto, e o header inteiro vence por cima deles — sem precisar de z-index: 9999. */
+    top: 0;
     z-index: 100;
     background: rgba(5, 15, 10, 0.94);
     border-bottom: 1px solid var(--cor-borda);
@@ -118,9 +78,9 @@ a:active {
 
 .navbar {
     display: flex;
-    flex-wrap: wrap;                  /* no celular o menu aberto desce para a linha de baixo */
-    justify-content: space-between;   /* eixo principal: logo à esquerda, menu à direita */
-    align-items: center;              /* eixo cruzado: alinha verticalmente logo e links */
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
     gap: 0.5rem 1rem;
     max-width: 60rem;
     margin: 0 auto;
@@ -151,8 +111,6 @@ a:active {
     list-style-type: none;
 }
 
-/* Os links do menu têm especificidade maior que os links gerais (.menu a:link = 21 x a:link = 11),
-   então repetem os 4 estados na ordem LoVe/HAte e não herdam o lilás de :visited do site todo. */
 .menu a:link,
 .menu a:visited {
     display: inline-block;
@@ -173,22 +131,19 @@ a:active {
     color: var(--cor-acento);
     border-color: var(--cor-acento);
 }
-/* .ativo (persistente, marcado no HTML) x :hover (temporário, do navegador): mesma especificidade,
-   por isso .ativo vem por último e vence o empate. */
 .menu a.ativo {
     background-color: var(--cor-primaria);
     border-color: var(--cor-primaria);
     color: #04110c;
 }
 
-/* Dropdown: lista aninhada, escondida por padrão, revelada por :hover ou foco de teclado */
 .tem-dropdown {
-    position: relative;               /* Erro 2: o dropdown absoluto se ancora neste <li> */
+    position: relative;
 }
 .dropdown {
     display: none;
     position: absolute;
-    top: 100%;                        /* encostado no pai: sem "buraco" onde o :hover se perde (Erro 4) */
+    top: 100%;
     left: 0;
     z-index: 1;
     min-width: 13rem;
@@ -212,7 +167,6 @@ a:active {
     white-space: nowrap;
 }
 
-/* Hambúrguer: <button> real (Erro 5). Escondido no desktop; visível no celular (media query no fim). */
 .menu-hamburguer {
     display: none;
     flex-direction: column;
@@ -227,13 +181,12 @@ a:active {
     height: 3px;
     background: var(--cor-texto);
     border-radius: 2px;
-    transition: transform 0.2s ease, opacity 0.2s ease;   /* transform/opacity: não forçam reflow (Erro 4) */
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 .menu-hamburguer:focus-visible {
     outline: 2px solid var(--cor-primaria-clara);
     outline-offset: 2px;
 }
-/* Menu aberto: as barras viram um X (aria-expanded é atualizado pelo js/menu.js) */
 .menu-hamburguer[aria-expanded="true"] .barra:nth-child(1) {
     transform: translateY(8px) rotate(45deg);
 }
@@ -244,7 +197,6 @@ a:active {
     transform: translateY(-8px) rotate(-45deg);
 }
 
-/* ---------- Conteúdo principal ---------- */
 .conteudo {
     grid-area: conteudo;
     width: 100%;
@@ -264,7 +216,7 @@ a:active {
     text-transform: uppercase;
 }
 
-.selo {                               /* SVG da Aula 5: inline por padrão, aqui vira bloco centralizado */
+.selo {
     display: block;
     margin: 0 auto 0.75rem;
 }
@@ -275,8 +227,6 @@ a:active {
     font-size: 1.125rem;
 }
 
-/* Erro 1 (margin x padding): o PADDING mantém o fundo do card preenchendo o espaço interno;
-   a MARGIN só separa um card do próximo. */
 .card {
     background: var(--cor-card);
     border: 1px solid var(--cor-borda);
@@ -293,7 +243,7 @@ a:active {
     padding-bottom: 0.25rem;
     border-bottom: 1px solid var(--cor-borda);
 }
-.card h2 + p {                        /* irmão adjacente (+): o parágrafo logo depois de um h2 */
+.card h2 + p {
     color: var(--cor-texto-suave);
 }
 .card h3 {
@@ -308,10 +258,10 @@ a:active {
 }
 
 .grupo {
-    scroll-margin-top: 5rem;          /* o link âncora não fica escondido atrás do header sticky */
+    scroll-margin-top: 5rem;
 }
 
-.card ul {                            /* listas de conteúdo (o menu tem seus próprios seletores, mais fortes) */
+.card ul {
     list-style-type: square;
     padding-left: 1.5rem;
     margin-bottom: 1rem;
@@ -328,9 +278,6 @@ a:active {
     border-radius: var(--raio);
 }
 
-/* Flexbox (Aula 07): texto e foto lado a lado; quando falta espaço, a foto desce (flex-wrap).
-   Erro 2: flex-grow divide só o espaço LIVRE, depois do flex-basis — os tamanhos finais não
-   são iguais. Aqui o texto (basis 18rem, grow 1) fica com a sobra e a foto mantém o tamanho dela. */
 .sobre-jogo {
     display: flex;
     flex-wrap: wrap;
@@ -347,8 +294,6 @@ a:active {
     flex: 0 0 auto;
 }
 
-/* Grid (Aula 07): auto-fit + minmax = quantas colunas de pelo menos 15rem couberem,
-   sem nenhuma media query. As linhas são implícitas e crescem com o conteúdo (Erro 3). */
 .grade-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
@@ -357,31 +302,30 @@ a:active {
 }
 
 .card-item {
-    position: relative;               /* âncora do ::before decorativo */
+    position: relative;
     padding: 1rem 1.25rem;
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio-card);
     transition: var(--transicao-padrao);
 }
-.card-item h3 {                       /* declarado depois de .card h3: mesma especificidade, vence a ordem */
+.card-item h3 {
     margin: 0 0 0.5rem;
-    padding-right: 1.5rem;            /* espaço para o ícone decorativo */
+    padding-right: 1.5rem;
 }
 .card-item p:last-child {
     margin-bottom: 0;
 }
-.card-item::before {                  /* pseudo-elemento decorativo: adaga (†) no canto */
+.card-item::before {
     content: "\2020";
     position: absolute;
     top: 0.5rem;
     right: 0.875rem;
     color: var(--cor-acento);
 }
-/* Pseudo-classes: estado (:hover, :focus-within) e posição (:nth-child, :first-child) */
 .card-item:hover,
 .card-item:focus-within {
-    transform: translateY(-4px);      /* transform, não margin/top: não força reflow (Erro 4) */
+    transform: translateY(-4px);
     border-color: var(--cor-primaria);
 }
 .card-item:nth-child(even) {
@@ -391,7 +335,6 @@ a:active {
     border-top: 3px solid var(--cor-acento);
 }
 
-/* ---------- Tabela ---------- */
 .tabela-lancamentos {
     border-collapse: collapse;
     width: 100%;
@@ -418,8 +361,6 @@ a:active {
     background: rgba(255, 255, 255, 0.05);
 }
 
-/* ---------- Vídeo e gráfico (Aulas 4 e 5) ---------- */
-/* width="70%" não é válido como atributo do <video> (só aceita pixels), por isso fica no CSS */
 .video-container video {
     display: block;
     width: 70%;
@@ -434,8 +375,6 @@ a:active {
     color: var(--cor-texto-suave);
 }
 
-/* O tamanho real do canvas vem dos atributos width/height do HTML (Erro 1 da Aula 5);
-   o CSS só permite reduzir em telas estreitas, sem esticar a grade de pixels */
 .grafico canvas {
     display: block;
     max-width: 100%;
@@ -451,7 +390,6 @@ a:active {
     color: var(--cor-texto-suave);
 }
 
-/* ---------- Formulário (Aula 3) ---------- */
 fieldset {
     border: 1px solid var(--cor-borda);
     border-radius: var(--raio);
@@ -473,7 +411,6 @@ legend {
     font-weight: 600;
 }
 
-/* Seletores de atributo [type=...] (10 cada) cobrem os campos de uma vez só */
 input[type="text"],
 input[type="email"],
 input[type="number"],
@@ -493,11 +430,11 @@ input:focus,
 select:focus,
 textarea:focus {
     border-color: var(--cor-primaria-clara);
-    outline: 2px solid var(--cor-primaria-clara);   /* foco continua visível para quem navega com teclado */
+    outline: 2px solid var(--cor-primaria-clara);
     outline-offset: 2px;
 }
 
-fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a lado */
+fieldset fieldset label {
     display: inline-block;
     margin-right: 1.25rem;
 }
@@ -521,17 +458,15 @@ fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a la
     outline-offset: 2px;
 }
 
-/* Grid no formulário: os 4 campos do primeiro fieldset se organizam em colunas sozinhos */
 .grade-campos {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
     gap: 0.75rem 1.25rem;
 }
 .grade-campos .campo {
-    margin-bottom: 0;                 /* o espaçamento vem do gap */
+    margin-bottom: 0;
 }
 
-/* ---------- Painel de análise e selos de nível (criados pelo js/painel.js, Aula 11) ---------- */
 .estatisticas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
@@ -611,7 +546,6 @@ fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a la
     background: var(--cor-osso);
 }
 
-/* ---------- Aviso (alerta com botão de fechar) ---------- */
 .aviso {
     display: flex;
     align-items: center;
@@ -635,7 +569,6 @@ fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a la
     cursor: pointer;
 }
 
-/* ---------- Rodapé ---------- */
 .rodape {
     grid-area: rodape;
     padding: 1rem 1rem 2rem;
@@ -643,7 +576,6 @@ fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a la
     color: var(--cor-texto-suave);
 }
 
-/* ---------- Telas estreitas (px é o certo para breakpoints) ---------- */
 @media (max-width: 640px) {
     .card {
         padding: 1.25rem 1rem;
@@ -655,8 +587,6 @@ fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a la
         font-size: 1.75rem;
     }
 
-    /* Aula 8: menu recolhido atrás do hambúrguer. A classe .js é adicionada pelo js/menu.js;
-       sem JavaScript o menu continua visível, em vez de ficar inacessível. */
     .js .menu-hamburguer {
         display: flex;
     }
@@ -674,7 +604,7 @@ fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a la
         display: block;
         text-align: center;
     }
-    .dropdown {                       /* no toque não existe hover: submenu sempre visível, em lista */
+    .dropdown {
         display: block;
         position: static;
         min-width: 0;
