@@ -1,134 +1,684 @@
-nav ul {
-    list-style-type: none;
-    display: flex;
-    gap: 20px;
+/* ===== style.css — Darksiders 2 Wiki (Aulas 06, 07 e 08) =====
+
+   AULA 06 — os 4 erros comuns e onde cada um foi evitado:
+   1. margin x padding  -> .card usa PADDING para o fundo preencher o interior da caixa
+                           e MARGIN só para afastar um card do vizinho.
+   2. box-sizing        -> reset.css aplica border-box em tudo (*, ::before, ::after).
+   3. px em tudo        -> fontes, espaçamentos e larguras em rem; px só em bordas,
+                           sombras e media queries, que não devem escalar com o texto.
+   4. cascata           -> nenhuma regra usa o modificador de prioridade nem estilo inline; conflitos são
+                           resolvidos por especificidade e ordem (links: LoVe/HAte).
+
+   AULA 07 — Flexbox, Grid e pseudo-classes:
+   - Layout geral da página em CSS Grid com áreas nomeadas (topo / conteudo / rodape).
+   - Grade de cards com repeat(auto-fit, minmax()): colunas mudam sem media query.
+   - Erro 1 (justify-content x align-items): justify-content distribui no eixo PRINCIPAL
+     (horizontal na navbar), align-items alinha no eixo CRUZADO (vertical).
+   - Erro 3 (grid implícito): só as colunas são explícitas; as linhas nascem sozinhas
+     (grid implícito) e crescem conforme o conteúdo, por isso nada tem altura fixa.
+   - Erro 4: as animações usam transform e opacity, nunca width/height.
+   - Erro 5 (layout thrashing): o JavaScript do projeto não mede nem altera geometria em laço.
+
+   AULA 08 — navegação:
+   - Erro 1 (z-index): o z-index vai no elemento que CRIA o contexto de empilhamento
+     (o header sticky), não no dropdown.
+   - Erro 2: o <li> pai do dropdown tem position: relative.
+   - Erro 3 (sticky): nenhum ancestral do header tem overflow diferente de visible.
+   - Erro 4: o dropdown encosta no item pai (top: 100%, sem margin), sem "buraco" de hover.
+   - Erro 5: o hambúrguer é um <button> com aria-label e aria-expanded. */
+
+/* ---------- Variáveis (paleta tirada da arte do jogo) ---------- */
+:root {
+    --cor-fundo: #07120d;
+    --cor-card: rgba(8, 24, 18, 0.82);
+    --cor-borda: #2f5d4f;
+    --cor-primaria: #3fb6a0;          /* verde-água das foices de Morte */
+    --cor-primaria-clara: #7fd1b9;
+    --cor-osso: #d9c9a3;              /* tom de osso da máscara */
+    --cor-acento: #d9742b;            /* brasa, usada em destaques e no estado :active */
+    --cor-texto: #e8e8e8;
+    --cor-texto-suave: #a9bdb4;
+    --cor-visitado: #b9a2e6;          /* lilás claro: o roxo escuro da apostila some no fundo escuro */
+    --raio: 10px;
+    --raio-card: 10px;
+    --cor-acento-claro: #f0b27a;
+    --transicao-padrao: transform 0.2s ease, border-color 0.2s ease;
+    --sombra: 0 6px 20px rgba(0, 0, 0, 0.45);
+    --fonte-titulo: Georgia, "Times New Roman", serif;
+    --fonte-texto: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
-h1 {
-    text-align: center;
+
+/* ---------- Base ---------- */
+html {
+    font-size: 100%;                  /* = 16px no padrão, mas respeita a preferência do usuário */
 }
+
 body {
-    margin: 0;
-    background-image: 
-        linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
-        url('../Fotos/template.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    color: #e8e8e8;
-    min-height: 100vh;
-}
-
-.video-container {
-    position: relative;
-    padding-bottom: 56.25%; /* Proporção 16:9 */
-    height: 0;
-    overflow: hidden;
-    max-width: 100%;
-}
-
-.video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-main {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 35px 45px;
-
-    background: rgba(3, 12, 9, 0.82);
-
-    border: 1px solid rgba(120, 150, 130, 0.2);
-    border-radius: 10px;
-
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-
-    backdrop-filter: blur(4px);
-
-    line-height: 1.6;
-}
-/* Configuração geral da página */
-body {
-    margin: 0;
+    background-color: var(--cor-fundo);   /* cor de reserva enquanto a imagem não carrega */
     background-image:
         linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
-        url('../Fotos/template.png');
-
+        url("../Fotos/template.png");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
-
-    color: #e8e8e8;
+    color: var(--cor-texto);
+    font-family: var(--fonte-texto);
+    line-height: 1.6;
     min-height: 100vh;
 
-    font-family: Georgia, 'Times New Roman', serif;
+    /* Aula 07: layout geral em áreas nomeadas. A linha do meio (1fr) absorve a sobra de altura,
+       então o rodapé fica no fim da janela mesmo em páginas curtas. */
+    display: grid;
+    grid-template-areas:
+        "topo"
+        "conteudo"
+        "rodape";
+    grid-template-rows: auto 1fr auto;
 }
 
-/* Cabeçalho */
-header {
-    padding: 20px 40px;
+h1, h2, h3 {                          /* agrupamento (,): os três títulos usam a fonte serifada */
+    font-family: var(--fonte-titulo);
+    line-height: 1.2;
 }
 
-/* Área onde ficam os textos */
-main {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 35px 45px;
-
-    /* Fundo escuro atrás das palavras */
-    background: rgba(0, 0, 0, 0.70);
-
-    /* Borda discreta */
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 10px;
-
-    /* Sombra para destacar o painel */
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-
-    /* Efeito de vidro */
-    backdrop-filter: blur(3px);
-
-    line-height: 1.6;
-}
-
-/* Títulos principais */
-h2 {
-    color: #ffffff;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.25);
-    padding-bottom: 8px;
-    margin-top: 35px;
-}
-
-/* Nome dos personagens */
-h3 {
-    color: #dddddd;
-    margin-top: 25px;
-}
-
-/* Parágrafos */
 p {
-    color: #eeeeee;
-    font-size: 17px;
-    line-height: 1.7;
+    margin-bottom: 1rem;              /* o reset zerou as margens; o espaço entre parágrafos volta aqui */
 }
 
-/* Links */
-a {
+/* ---------- Links: os 4 estados, NESTA ordem (LoVe/HAte) ----------
+   :link, :visited, :hover e :active têm a mesma especificidade, então vence o último declarado. */
+a:link {
+    color: var(--cor-primaria-clara);
     text-decoration: none;
-    color: #b88cff;
 }
-
+a:visited {
+    color: var(--cor-visitado);
+}
 a:hover {
-    color: #ffffff;
+    text-decoration: underline;
+}
+a:active {
+    color: var(--cor-acento);
 }
 
-/* Remove as bolinhas da lista */
-ul {
+/* ---------- Topo: header sticky + navbar com Flexbox (Aula 8) ---------- */
+/* ID (especificidade 100) porque o cabeçalho é único na página; a classe .topo só liga à área do grid. */
+#cabecalho-principal {
+    grid-area: topo;
+    position: sticky;
+    top: 0;                           /* sem um deslocamento (top/bottom...) o sticky nunca "ativa" */
+    /* Aula 8, Erro 1: o z-index fica AQUI, em quem cria o contexto de empilhamento (sticky cria um).
+       Dentro dele o dropdown só precisa de z-index: 1. Os cards (position: relative) ficam em outro
+       contexto, e o header inteiro vence por cima deles — sem precisar de z-index: 9999. */
+    z-index: 100;
+    background: rgba(5, 15, 10, 0.94);
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;                  /* no celular o menu aberto desce para a linha de baixo */
+    justify-content: space-between;   /* eixo principal: logo à esquerda, menu à direita */
+    align-items: center;              /* eixo cruzado: alinha verticalmente logo e links */
+    gap: 0.5rem 1rem;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0.75rem 1rem;
+}
+
+.logo:link,
+.logo:visited {
+    color: var(--cor-osso);
+    font-family: var(--fonte-titulo);
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+.logo:hover {
+    color: var(--cor-acento-claro);
+    text-decoration: none;
+}
+.logo:active {
+    color: var(--cor-acento);
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     list-style-type: none;
-    padding-left: 0;
+}
+
+/* Os links do menu têm especificidade maior que os links gerais (.menu a:link = 21 x a:link = 11),
+   então repetem os 4 estados na ordem LoVe/HAte e não herdam o lilás de :visited do site todo. */
+.menu a:link,
+.menu a:visited {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-borda);
+    border-radius: 999px;
+    transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.menu a:hover,
+.menu a:focus-visible {
+    color: var(--cor-primaria-clara);
+    border-color: var(--cor-primaria);
+    background-color: rgba(63, 182, 160, 0.12);
+    text-decoration: none;
+}
+.menu a:active {
+    color: var(--cor-acento);
+    border-color: var(--cor-acento);
+}
+/* .ativo (persistente, marcado no HTML) x :hover (temporário, do navegador): mesma especificidade,
+   por isso .ativo vem por último e vence o empate. */
+.menu a.ativo {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: #04110c;
+}
+
+/* Dropdown: lista aninhada, escondida por padrão, revelada por :hover ou foco de teclado */
+.tem-dropdown {
+    position: relative;               /* Erro 2: o dropdown absoluto se ancora neste <li> */
+}
+.dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;                        /* encostado no pai: sem "buraco" onde o :hover se perde (Erro 4) */
+    left: 0;
+    z-index: 1;
+    min-width: 13rem;
+    padding: 0.5rem 0;
+    background: #0b1a14;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    list-style-type: none;
+}
+.tem-dropdown:hover .dropdown,
+.tem-dropdown:focus-within .dropdown {
+    display: block;
+}
+.dropdown a:link,
+.dropdown a:visited {
+    display: block;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0;
+    white-space: nowrap;
+}
+
+/* Hambúrguer: <button> real (Erro 5). Escondido no desktop; visível no celular (media query no fim). */
+.menu-hamburguer {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0.5rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.menu-hamburguer .barra {
+    width: 24px;
+    height: 3px;
+    background: var(--cor-texto);
+    border-radius: 2px;
+    transition: transform 0.2s ease, opacity 0.2s ease;   /* transform/opacity: não forçam reflow (Erro 4) */
+}
+.menu-hamburguer:focus-visible {
+    outline: 2px solid var(--cor-primaria-clara);
+    outline-offset: 2px;
+}
+/* Menu aberto: as barras viram um X (aria-expanded é atualizado pelo js/menu.js) */
+.menu-hamburguer[aria-expanded="true"] .barra:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+.menu-hamburguer[aria-expanded="true"] .barra:nth-child(2) {
+    opacity: 0;
+}
+.menu-hamburguer[aria-expanded="true"] .barra:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ---------- Conteúdo principal ---------- */
+.conteudo {
+    grid-area: conteudo;
+    width: 100%;
+    max-width: 60rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.hero {
+    padding: 2rem 0 1.5rem;
+    text-align: center;
+}
+.hero h1 {
+    color: var(--cor-osso);
+    font-size: 2.25rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.selo {                               /* SVG da Aula 5: inline por padrão, aqui vira bloco centralizado */
+    display: block;
+    margin: 0 auto 0.75rem;
+}
+
+.boas-vindas {
+    text-align: center;
+    color: var(--cor-osso);
+    font-size: 1.125rem;
+}
+
+/* Erro 1 (margin x padding): o PADDING mantém o fundo do card preenchendo o espaço interno;
+   a MARGIN só separa um card do próximo. */
+.card {
+    background: var(--cor-card);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.card h2 {
+    color: var(--cor-osso);
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--cor-borda);
+}
+.card h2 + p {                        /* irmão adjacente (+): o parágrafo logo depois de um h2 */
+    color: var(--cor-texto-suave);
+}
+.card h3 {
+    color: var(--cor-primaria-clara);
+    font-size: 1.125rem;
+    margin: 1.25rem 0 0.25rem;
+}
+
+.aviso-texto {
+    margin: 1rem 0 0;
+    color: var(--cor-texto-suave);
+}
+
+.grupo {
+    scroll-margin-top: 5rem;          /* o link âncora não fica escondido atrás do header sticky */
+}
+
+.card ul {                            /* listas de conteúdo (o menu tem seus próprios seletores, mais fortes) */
+    list-style-type: square;
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+.card li {
+    padding: 0.25rem 0;
+}
+
+.foto-destaque {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+}
+
+/* Flexbox (Aula 07): texto e foto lado a lado; quando falta espaço, a foto desce (flex-wrap).
+   Erro 2: flex-grow divide só o espaço LIVRE, depois do flex-basis — os tamanhos finais não
+   são iguais. Aqui o texto (basis 18rem, grow 1) fica com a sobra e a foto mantém o tamanho dela. */
+.sobre-jogo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+}
+.sobre-jogo p {
+    flex: 1 1 18rem;
+    margin-bottom: 0;
+    color: var(--cor-texto-suave);
+}
+.sobre-jogo .foto-destaque {
+    flex: 0 0 auto;
+}
+
+/* Grid (Aula 07): auto-fit + minmax = quantas colunas de pelo menos 15rem couberem,
+   sem nenhuma media query. As linhas são implícitas e crescem com o conteúdo (Erro 3). */
+.grade-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.card-item {
+    position: relative;               /* âncora do ::before decorativo */
+    padding: 1rem 1.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-card);
+    transition: var(--transicao-padrao);
+}
+.card-item h3 {                       /* declarado depois de .card h3: mesma especificidade, vence a ordem */
+    margin: 0 0 0.5rem;
+    padding-right: 1.5rem;            /* espaço para o ícone decorativo */
+}
+.card-item p:last-child {
+    margin-bottom: 0;
+}
+.card-item::before {                  /* pseudo-elemento decorativo: adaga (†) no canto */
+    content: "\2020";
+    position: absolute;
+    top: 0.5rem;
+    right: 0.875rem;
+    color: var(--cor-acento);
+}
+/* Pseudo-classes: estado (:hover, :focus-within) e posição (:nth-child, :first-child) */
+.card-item:hover,
+.card-item:focus-within {
+    transform: translateY(-4px);      /* transform, não margin/top: não força reflow (Erro 4) */
+    border-color: var(--cor-primaria);
+}
+.card-item:nth-child(even) {
+    background: rgba(63, 182, 160, 0.07);
+}
+.card-item:first-child {
+    border-top: 3px solid var(--cor-acento);
+}
+
+/* ---------- Tabela ---------- */
+.tabela-lancamentos {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+}
+.tabela-lancamentos caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    color: var(--cor-osso);
+    padding-bottom: 0.5rem;
+}
+.tabela-lancamentos th,
+.tabela-lancamentos td {
+    border: 1px solid var(--cor-borda);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+}
+.tabela-lancamentos th {
+    background: rgba(63, 182, 160, 0.18);
+    font-weight: 600;
+}
+.tabela-lancamentos tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* ---------- Vídeo e gráfico (Aulas 4 e 5) ---------- */
+/* width="70%" não é válido como atributo do <video> (só aceita pixels), por isso fica no CSS */
+.video-container video {
+    display: block;
+    width: 70%;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+#formato-suportado {
+    display: block;
+    margin-top: 0.5rem;
+    text-align: center;
+    color: var(--cor-texto-suave);
+}
+
+/* O tamanho real do canvas vem dos atributos width/height do HTML (Erro 1 da Aula 5);
+   o CSS só permite reduzir em telas estreitas, sem esticar a grade de pixels */
+.grafico canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 8px;
+}
+.grafico figcaption {
+    margin-top: 0.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--cor-texto-suave);
+}
+
+/* ---------- Formulário (Aula 3) ---------- */
+fieldset {
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+legend {
+    padding: 0 0.5rem;
+    font-weight: 600;
+    color: var(--cor-osso);
+}
+
+.campo {
+    margin-bottom: 0.75rem;
+}
+.campo label {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+/* Seletores de atributo [type=...] (10 cada) cobrem os campos de uma vez só */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+    width: 100%;
+    max-width: 28rem;
+    padding: 0.6rem 0.75rem;
+    background: #0d1f18;
+    color: var(--cor-texto);
+    border: 2px solid var(--cor-borda);
+    border-radius: 8px;
+    transition: border-color 0.2s;
+}
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--cor-primaria-clara);
+    outline: 2px solid var(--cor-primaria-clara);   /* foco continua visível para quem navega com teclado */
+    outline-offset: 2px;
+}
+
+fieldset fieldset label {             /* os rótulos do Sim/Não ficam lado a lado */
+    display: inline-block;
+    margin-right: 1.25rem;
+}
+
+.botao {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    margin-top: 0.5rem;
+    background: var(--cor-primaria);
+    color: #04110c;
+    font-weight: 700;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.botao:hover {
+    background: var(--cor-primaria-clara);
+}
+.botao:focus-visible {
+    outline: 2px solid var(--cor-osso);
+    outline-offset: 2px;
+}
+
+/* Grid no formulário: os 4 campos do primeiro fieldset se organizam em colunas sozinhos */
+.grade-campos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: 0.75rem 1.25rem;
+}
+.grade-campos .campo {
+    margin-bottom: 0;                 /* o espaçamento vem do gap */
+}
+
+/* ---------- Painel de análise e selos de nível (criados pelo js/painel.js, Aula 11) ---------- */
+.estatisticas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+.estatistica {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-card);
+}
+.estatistica dt {
+    font-size: 0.875rem;
+    color: var(--cor-texto-suave);
+}
+.estatistica dd {
+    font-family: var(--fonte-titulo);
+    font-size: 1.25rem;
+    color: var(--cor-osso);
+}
+
+.filtros {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+.filtros p {
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+}
+.filtro {
+    padding: 0.4rem 1rem;
+    background: transparent;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-borda);
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.filtro:hover {
+    border-color: var(--cor-primaria);
+}
+.filtro:focus-visible {
+    outline: 2px solid var(--cor-primaria-clara);
+    outline-offset: 2px;
+}
+.filtro[aria-pressed="true"] {
+    background: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    color: #04110c;
+    font-weight: 700;
+}
+.filtro-resultado {
+    margin-top: 0.75rem;
+    margin-bottom: 0;
+    color: var(--cor-texto-suave);
+}
+
+.badge {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+    padding: 0.125rem 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #04110c;
+    border-radius: 999px;
+}
+.badge-esboco {
+    background: var(--cor-acento);
+}
+.badge-completo {
+    background: var(--cor-primaria);
+}
+.badge-detalhado {
+    background: var(--cor-osso);
+}
+
+/* ---------- Aviso (alerta com botão de fechar) ---------- */
+.aviso {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: rgba(217, 116, 43, 0.16);
+    border: 1px solid var(--cor-acento);
+    border-radius: var(--raio);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+.aviso p {
+    margin-bottom: 0;
+}
+.aviso button {
+    padding: 0.25rem 0.625rem;
+    background: transparent;
+    color: var(--cor-texto);
+    border: 1px solid var(--cor-acento);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* ---------- Rodapé ---------- */
+.rodape {
+    grid-area: rodape;
+    padding: 1rem 1rem 2rem;
+    text-align: center;
+    color: var(--cor-texto-suave);
+}
+
+/* ---------- Telas estreitas (px é o certo para breakpoints) ---------- */
+@media (max-width: 640px) {
+    .card {
+        padding: 1.25rem 1rem;
+    }
+    .video-container video {
+        width: 100%;
+    }
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+
+    /* Aula 8: menu recolhido atrás do hambúrguer. A classe .js é adicionada pelo js/menu.js;
+       sem JavaScript o menu continua visível, em vez de ficar inacessível. */
+    .js .menu-hamburguer {
+        display: flex;
+    }
+    .js .menu {
+        display: none;
+        flex-basis: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .js .menu.aberto {
+        display: flex;
+    }
+    .menu a:link,
+    .menu a:visited {
+        display: block;
+        text-align: center;
+    }
+    .dropdown {                       /* no toque não existe hover: submenu sempre visível, em lista */
+        display: block;
+        position: static;
+        min-width: 0;
+        margin-top: 0.25rem;
+        box-shadow: none;
+    }
 }

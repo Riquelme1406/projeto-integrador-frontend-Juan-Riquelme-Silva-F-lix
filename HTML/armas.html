@@ -4,43 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Armas - Darksiders 2 Wiki</title>
-</head>
-<body>
-    <title>Darksiders 2 Wiki</title>
+    <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        a {
-            text-decoration: none;
-        }
-        ul {
-            list-style-type: none;
-        }
-    </style>
-    <style>
-    body {
-        margin: 0;
-        background-image: 
-            linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
-            url('../Fotos/template.png');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-        color: #e8e8e8;
-        min-height: 100vh;
-    }
-    </style>
-    <link href="../Fotos/baixados.webp" rel="icon" type="image/x-icon">
+    <link href="../Fotos/baixados.webp" rel="icon" type="image/webp">
 </head>
 <body>
-    <header>
-        <h1>Personagens</h1>
-        <nav>
-            <ul>
+    <header class="topo" id="cabecalho-principal">
+        <nav class="navbar" aria-label="Navegação principal">
+            <a href="index.html" class="logo">Darksiders 2 Wiki</a>
+            <!-- Aula 8, Erro 5: botão de verdade (não <div>), com aria-label e aria-expanded desde o HTML.
+                 O comportamento de abrir/fechar vem do js/menu.js (Aula 11) -->
+            <button type="button" class="menu-hamburguer" aria-label="Abrir menu"
+                    aria-expanded="false" aria-controls="menu-principal">
+                <span class="barra"></span>
+                <span class="barra"></span>
+                <span class="barra"></span>
+            </button>
+            <ul class="menu" id="menu-principal">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="personagens.html">Personagens</a></li>
-                <li><a href="armas.html">Armas</a></li>
+                <li class="tem-dropdown">
+                    <a href="personagens.html">Personagens</a>
+                    <ul class="dropdown">
+                        <li><a href="personagens.html#cavaleiros">Os Quatro Cavaleiros</a></li>
+                        <li><a href="personagens.html#trama">Trama principal</a></li>
+                        <li><a href="personagens.html#makers">Os Makers</a></li>
+                    </ul>
+                </li>
+                <li><a href="armas.html" class="ativo" aria-current="page">Armas</a></li>
                 <li><a href="bosses.html">Bosses</a></li>
             </ul>
         </nav>
     </header>
+
+    <main class="conteudo">
+        <div class="hero">
+            <h1>Armas</h1>
+        </div>
+
+        <section class="card" aria-labelledby="armas-heading">
+            <h2 id="armas-heading">Armas de Death</h2>
+            <div class="grade-cards">
+                <article class="card-item">
+                    <h3>Foices gêmeas</h3>
+                    <p>A marca de Death: duas foices que ele empunha ao mesmo tempo, como na imagem da página inicial.</p>
+                </article>
+            </div>
+            <p class="aviso-texto">Outras armas e equipamentos ainda serão adicionados.</p>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <p>&copy; 2026 Darksiders 2 Wiki. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="../js/menu.js" defer></script>
+    <script src="../js/main.js" defer></script>
+</body>
+</html>

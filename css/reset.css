@@ -1,0 +1,21 @@
+/* ===== reset.css — Aula 06 =====
+   Carregado ANTES do style.css: zera as diferenças entre navegadores,
+   para que todo espaçamento da página seja decidido por nós. */
+
+/* Erro 2 da Aula 6 (esquecer o border-box): com border-box, width inclui padding e border,
+   então dois elementos de 50% com padding continuam cabendo lado a lado. */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Campos de formulário não herdam a fonte da página por padrão; aqui passam a herdar */
+button, input, select, textarea {
+    font: inherit;
+}
+
+/* Garante que o atributo hidden (usado no js/main.js para fechar o aviso) sempre esconda */
+[hidden] {
+    display: none;
+}

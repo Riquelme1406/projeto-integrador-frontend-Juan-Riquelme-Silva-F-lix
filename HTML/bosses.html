@@ -4,43 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bosses - Darksiders 2 Wiki</title>
-</head>
-<body>
-    <title>Darksiders 2 Wiki</title>
+    <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        a {
-            text-decoration: none;
-        }
-        ul {
-            list-style-type: none;
-        }
-    </style>
-    <style>
-    body {
-        margin: 0;
-        background-image: 
-            linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
-            url('../Fotos/template.png');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-        color: #e8e8e8;
-        min-height: 100vh;
-    }
-    </style>
-    <link href="../Fotos/baixados.webp" rel="icon" type="image/x-icon">
+    <link href="../Fotos/baixados.webp" rel="icon" type="image/webp">
 </head>
 <body>
-    <header>
-        <h1>Personagens</h1>
-        <nav>
-            <ul>
+    <header class="topo" id="cabecalho-principal">
+        <nav class="navbar" aria-label="Navegação principal">
+            <a href="index.html" class="logo">Darksiders 2 Wiki</a>
+            <!-- Aula 8, Erro 5: botão de verdade (não <div>), com aria-label e aria-expanded desde o HTML.
+                 O comportamento de abrir/fechar vem do js/menu.js (Aula 11) -->
+            <button type="button" class="menu-hamburguer" aria-label="Abrir menu"
+                    aria-expanded="false" aria-controls="menu-principal">
+                <span class="barra"></span>
+                <span class="barra"></span>
+                <span class="barra"></span>
+            </button>
+            <ul class="menu" id="menu-principal">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="personagens.html">Personagens</a></li>
+                <li class="tem-dropdown">
+                    <a href="personagens.html">Personagens</a>
+                    <ul class="dropdown">
+                        <li><a href="personagens.html#cavaleiros">Os Quatro Cavaleiros</a></li>
+                        <li><a href="personagens.html#trama">Trama principal</a></li>
+                        <li><a href="personagens.html#makers">Os Makers</a></li>
+                    </ul>
+                </li>
                 <li><a href="armas.html">Armas</a></li>
-                <li><a href="bosses.html">Bosses</a></li>
+                <li><a href="bosses.html" class="ativo" aria-current="page">Bosses</a></li>
             </ul>
         </nav>
     </header>
+
+    <main class="conteudo">
+        <div class="hero">
+            <h1>Bosses</h1>
+        </div>
+
+        <section class="card" aria-labelledby="chefes-heading">
+            <h2 id="chefes-heading">Chefes citados na wiki</h2>
+            <p>Os confrontos abaixo vêm das descrições da página de personagens. Novos chefes entram aqui conforme a wiki crescer.</p>
+            <div class="grade-cards">
+                <article class="card-item">
+                    <h3>Absalom</h3>
+                    <p>Antagonista final de Darksiders II. Representa diretamente o maior conflito pessoal de Death.</p>
+                </article>
+                <article class="card-item">
+                    <h3>Samael</h3>
+                    <p>Para obter uma das chaves do Well of Souls, Death viaja ao passado e enfrenta Samael.</p>
+                </article>
+                <article class="card-item">
+                    <h3>Watcher</h3>
+                    <p>Guardião do Well of Souls e um obstáculo que Death deve enfrentar em sua jornada.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rodape">
+        <p>&copy; 2026 Darksiders 2 Wiki. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="../js/menu.js" defer></script>
+    <script src="../js/main.js" defer></script>
+</body>
+</html>

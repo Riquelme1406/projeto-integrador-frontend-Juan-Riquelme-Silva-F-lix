@@ -4,78 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darksiders 2 Wiki</title>
+    <link rel="stylesheet" href="../css/reset.css">
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        a {
-            text-decoration: none;
-        }
-        ul {
-            list-style-type: none;
-        }
-    </style>
-    <style>
-    body {
-        margin: 0;
-        background-image: 
-            linear-gradient(rgba(5, 15, 10, 0.75), rgba(5, 15, 10, 0.85)),
-            url('../Fotos/template.png');
-        background-size: cover;
-        background-position: center;
-        background-attachment: fixed;
-        background-repeat: no-repeat;
-        color: #e8e8e8;
-        min-height: 100vh;
-    }
-    </style>
-    <link href="../Fotos/baixados.webp" rel="icon" type="image/x-icon">
+    <link href="../Fotos/baixados.webp" rel="icon" type="image/webp">
 </head>
 <body>
-    <header>
-        <h1>Darksiders 2 Wiki</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="personagens.html">Personagens</a></li>
+    <header class="topo" id="cabecalho-principal">
+        <nav class="navbar" aria-label="Navegação principal">
+            <a href="index.html" class="logo">Darksiders 2 Wiki</a>
+            <!-- Aula 8, Erro 5: botão de verdade (não <div>), com aria-label e aria-expanded desde o HTML.
+                 O comportamento de abrir/fechar vem do js/menu.js (Aula 11) -->
+            <button type="button" class="menu-hamburguer" aria-label="Abrir menu"
+                    aria-expanded="false" aria-controls="menu-principal">
+                <span class="barra"></span>
+                <span class="barra"></span>
+                <span class="barra"></span>
+            </button>
+            <ul class="menu" id="menu-principal">
+                <li><a href="index.html" class="ativo" aria-current="page">Home</a></li>
+                <li class="tem-dropdown">
+                    <a href="personagens.html">Personagens</a>
+                    <ul class="dropdown">
+                        <li><a href="personagens.html#cavaleiros">Os Quatro Cavaleiros</a></li>
+                        <li><a href="personagens.html#trama">Trama principal</a></li>
+                        <li><a href="personagens.html#makers">Os Makers</a></li>
+                    </ul>
+                </li>
                 <li><a href="armas.html">Armas</a></li>
                 <li><a href="bosses.html">Bosses</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <section aria-labelledby="video-heading">
+    <main class="conteudo">
+        <div class="hero">
+            <!-- Aula 5: selo em SVG (modo retido). viewBox define o sistema de coordenadas interno,
+                 e role="img" + <title>/<desc> dão ao selo um nome acessível -->
+            <svg class="selo" viewBox="0 0 120 120" width="96" height="96" role="img"
+                 aria-labelledby="titulo-selo desc-selo">
+                <title id="titulo-selo">Selo: Morte, Cavaleiro do Apocalipse</title>
+                <desc id="desc-selo">Círculo com borda verde-água e uma foice branca ao centro, acima do texto DEATH.</desc>
+                <circle cx="60" cy="60" r="56" fill="#0b1a14" stroke="#7fd1b9" stroke-width="3" />
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#7fd1b9" stroke-width="1" stroke-dasharray="2 5" />
+                <line x1="36" y1="88" x2="76" y2="26" stroke="#d9d2c0" stroke-width="4" stroke-linecap="round" />
+                <path d="M76 26 Q108 26 104 62 Q96 42 72 38 Z" fill="#d9d2c0" />
+                <text x="60" y="106" font-size="12" font-family="sans-serif" letter-spacing="2"
+                      text-anchor="middle" fill="#e8e8e8">DEATH</text>
+            </svg>
+            <h1>Darksiders 2 Wiki</h1>
+        </div>
+
+        <section class="card" aria-labelledby="video-heading">
             <h2 id="video-heading">Trailer de Darksiders 2 Deathinitive Edition</h2>
             <div class="video-container">
                 <!-- preload="metadata" escolhido porque o vídeo fica abaixo da dobra da página:
                      carregamos apenas duração/dimensões do arquivo, sem baixar o vídeo inteiro,
                      até que o usuário decida clicar em play -->
-                <video controls width="70%" poster="../Fotos/trailer-poster.jpg" preload="metadata">
+                <video controls poster="../Fotos/trailer-poster.jpg" preload="metadata">
                     <source src="../Fotos/trailer.webm" type="video/webm">
                     <source src="../Fotos/trailer.mp4" type="video/mp4">
                     <track kind="subtitles" src="../Fotos/trailer-pt.vtt" srclang="pt" label="Português" default>
+                    Seu navegador não suporta vídeo HTML5.
                 </video>
                 <small id="formato-suportado" aria-live="polite"></small>
             </div>
         </section>
 
-        <p>Bem-vindo à wiki do Darksiders 2!</p>
+        <p class="boas-vindas">Bem-vindo à wiki do Darksiders 2!</p>
 
-        <section aria-labelledby="sobre-heading">
+        <section class="card" aria-labelledby="sobre-heading">
             <h2 id="sobre-heading">Sobre o Jogo</h2>
-            <p>
-                Darksiders II é um jogo eletrônico de ação-aventura e hack and slash
-                desenvolvido pela Vigil Games e publicado originalmente pela THQ,
-                lançado em agosto de 2012. A narrativa segue Morte (Death), um dos
-                Cavaleiros do Apocalipse, em uma missão pessoal para provar a
-                inocência de seu irmão, Guerra, após este ser condenado pelo
-                Conselho das Chamas.
-            </p>
+            <div class="sobre-jogo">
+                <p>
+                    Darksiders II é um jogo eletrônico de ação-aventura e hack and slash
+                    desenvolvido pela Vigil Games e publicado originalmente pela THQ,
+                    lançado em agosto de 2012. A narrativa segue Morte (Death), um dos
+                    Cavaleiros do Apocalipse, em uma missão pessoal para provar a
+                    inocência de seu irmão, Guerra, após este ser condenado pelo
+                    Conselho das Chamas.
+                </p>
 
-            <img src="../Fotos/Morte fundo preto.jpeg" alt="Morte, protagonista de Darksiders 2, empunhando suas duas foices gêmeas"
-                 width="300" height="200">
-                
-            <table>
-                <h2>Lançamentos de Darksiders 2 por plataforma</h2>
+                <img class="foto-destaque" src="../Fotos/Morte fundo preto.jpeg" alt="Morte, protagonista de Darksiders 2, empunhando suas duas foices gêmeas"
+                     width="330" height="200">
+            </div>
+
+            <table class="tabela-lancamentos">
+                <caption>Lançamentos de Darksiders 2 por plataforma</caption>
                 <thead>
                     <tr>
                         <th scope="col">Plataforma</th>
@@ -100,15 +114,16 @@
             </p>
         </section>
 
-        <section aria-labelledby="teoria-heading">
+        <section class="card" aria-labelledby="teoria-heading">
             <h2 id="teoria-heading">Envie sua Teoria sobre a Lore</h2>
             <p>Tem alguma ideia sobre a história de Darksiders 2? Compartilhe com a comunidade!</p>
 
-            <form novalidate>
-                <fieldset>
+            <!-- sem novalidate: a validação nativa (required, minlength, min/max, type=email) fica ativa -->
+            <form>
+                <fieldset class="grade-campos">
                     <legend>Dados do colaborador</legend>
 
-                    <div>
+                    <div class="campo">
                         <label for="nome">Nome:</label>
                         <input
                             type="text"
@@ -120,7 +135,7 @@
                         >
                     </div>
 
-                    <div>
+                    <div class="campo">
                         <label for="email">E-mail:</label>
                         <input
                             type="email"
@@ -131,7 +146,7 @@
                         >
                     </div>
 
-                    <div>
+                    <div class="campo">
                         <label for="idade">Idade:</label>
                         <input
                             type="number"
@@ -142,7 +157,7 @@
                         >
                     </div>
 
-                    <div>
+                    <div class="campo">
                         <label for="data-envio">Data de envio:</label>
                         <input
                             type="date"
@@ -155,7 +170,7 @@
                 <fieldset>
                     <legend>Sobre a teoria</legend>
 
-                    <div>
+                    <div class="campo">
                         <label for="personagem">Personagem favorito:</label>
                         <select id="personagem" name="personagem">
                             <option value="">Selecione um personagem</option>
@@ -166,31 +181,29 @@
                         </select>
                     </div>
 
-                    <div>
-                        <span id="spoiler-legend">Sua teoria contém spoilers?</span>
-                        <div role="group" aria-labelledby="spoiler-legend">
-                            <label for="spoiler-sim">
-                                <input
-                                    type="radio"
-                                    id="spoiler-sim"
-                                    name="spoiler"
-                                    value="sim"
-                                >
-                                Sim
-                            </label>
-                            <label for="spoiler-nao">
-                                <input
-                                    type="radio"
-                                    id="spoiler-nao"
-                                    name="spoiler"
-                                    value="nao"
-                                >
-                                Não
-                            </label>
-                        </div>
-                    </div>
+                    <fieldset>
+                        <legend>Sua teoria contém spoilers?</legend>
+                        <label for="spoiler-sim">
+                            <input
+                                type="radio"
+                                id="spoiler-sim"
+                                name="spoiler"
+                                value="sim"
+                            >
+                            Sim
+                        </label>
+                        <label for="spoiler-nao">
+                            <input
+                                type="radio"
+                                id="spoiler-nao"
+                                name="spoiler"
+                                value="nao"
+                            >
+                            Não
+                        </label>
+                    </fieldset>
 
-                    <div>
+                    <div class="campo">
                         <label for="teoria">Sua teoria (mínimo 10 caracteres):</label>
                         <textarea
                             id="teoria"
@@ -202,34 +215,22 @@
                     </div>
                 </fieldset>
 
-                <button type="submit">Enviar teoria</button>
+                <button type="submit" class="botao">Enviar teoria</button>
             </form>
         </section>
+
+        <!-- Exemplo de alerta com botão de ícone acessível (Desafio Extra); o JS em js/main.js fecha o aviso -->
+        <div role="alert" id="alerta-exemplo" class="aviso">
+            <p>Obrigado por contribuir com a wiki!</p>
+            <button type="button" id="fechar-alerta" aria-label="Fechar alerta">✕</button>
+        </div>
     </main>
 
-    <!-- Exemplo de alerta com botão de ícone acessível (Desafio Extra) -->
-    <div role="alert" id="alerta-exemplo">
-        <p>Obrigado por contribuir com a wiki!</p>
-        <button type="button" aria-label="Fechar alerta">✕</button>
-    </div>
-
-    <footer>
+    <footer class="rodape">
         <p>&copy; 2026 Darksiders 2 Wiki. Todos os direitos reservados.</p>
     </footer>
 
-    <!-- Desafio Extra Aula 04: detecta o formato de vídeo suportado sem alterar a reprodução -->
-    <script>
-        const video = document.querySelector('video');
-        const saida = document.getElementById('formato-suportado');
-        const formatos = [
-            { tipo: 'video/webm', nome: 'WebM' },
-            { tipo: 'video/mp4', nome: 'MP4' }
-        ];
-        const suportado = formatos.find(f => video.canPlayType(f.tipo) === 'probably')
-            || formatos.find(f => video.canPlayType(f.tipo) === 'maybe');
-        if (suportado) {
-            
-        }
-    </script>
+    <script src="../js/menu.js" defer></script>
+    <script src="../js/main.js" defer></script>
 </body>
 </html>
